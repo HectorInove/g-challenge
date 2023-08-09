@@ -30,4 +30,4 @@ jobs:
         poetry install --directory=g_challenge
     - name: Test with pytest
       run: |
-        poetry run pytest g_challenge/
+        poetry run pytest
