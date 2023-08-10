@@ -31,4 +31,4 @@ jobs:
     - name: Test with pytest
       run: |
         ls
-        poetry run pytest
+        poetry run pytest --directory=g_challenge
