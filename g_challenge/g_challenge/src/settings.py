@@ -2,7 +2,7 @@ import os
 
 if not os.getenv('ENVIRONMENT', False):
     from dotenv import load_dotenv
-    load_dotenv('.env.dev')
+    load_dotenv('g_challenge/.env',)
 
 # Server settings:
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'prod')
@@ -14,3 +14,5 @@ PORT = int(os.getenv('PORT', 8010))
 POSTGRES_DB = os.getenv('POSTGRES_DB')
 POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST')
+DB_PORT = os.getenv('DB_PORT')
