@@ -7,7 +7,7 @@ class Department(BASE):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     department = Column(String)
-    hired_employees = relationship('Hired_employees', back_populates='department')
+    # hired_employees = relationship('Hired_employees', back_populates='department')
 
     @staticmethod
     def __delete_schema__():

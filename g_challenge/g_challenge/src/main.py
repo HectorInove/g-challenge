@@ -5,7 +5,7 @@ from g_challenge.src.settings import (
     ENVIRONMENT,
     HOST,
     PORT)
-# from app.api.file import fileRouter
+from g_challenge.src.v1.application_apis import router as application_apis
 # from app.api.chat import chatRouter
 
 app = FastAPI()
@@ -20,12 +20,12 @@ app.add_middleware(
 )
 
 
-# app.include_router(fileRouter)
+app.include_router(application_apis)
 # app.include_router(chatRouter)
 
 
 @app.get("/")
-async def root():
+def root():
     return {"message": "API running."}
 
 
