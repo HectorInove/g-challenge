@@ -12,7 +12,13 @@ from g_challenge.src.settings import (
 parser = argparse.ArgumentParser()
 parser.add_argument('--createschemas', type=bool, required=False)
 
-app = FastAPI()
+description = f'''<a href="https://github.com/HectorInove/g-challenge">
+    <img width=10% src="https://octodex.github.com/images/NUX_Octodex.gif"/> Follow the repo...</a>'''
+
+app = FastAPI(
+    title="G-challenge API service docs page",
+    description=description,
+)
 origins = ["*"]
 
 app.add_middleware(
