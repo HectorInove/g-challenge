@@ -9,7 +9,7 @@ class Department(BASE):
     __tablename__ = 'departments'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    department = Column(String)
+    department = Column(String, unique=True)
 
     @staticmethod
     def __delete_schema__():
@@ -20,6 +20,32 @@ class Department(BASE):
     def __create_all_schemas__():
         '''Create table'''
         BASE.metadata.create_all(ENGINE)
+
+    @staticmethod
+    async def insert_departments(departments: list):
+        result = {'valids':[], 'invalids':[]}
+        to_insert = []
+        obj = {}
+        for element in departments:
+            if element.id:
+                obj['id'] = element.id
+            obj['department'] = element.department
+            try:
+                stmt = insert(Department).values(**obj).returning(Department)
+                query_result = excecute(stmt).fetchone()
+                to_insert.append({
+                    'id':int(query_result[0]),
+                    'department':str(query_result[1])
+                    }
+                )
+            except Exception as e:
+                result['invalids'].append(
+                    {'id':element.id, 'department':element.department}
+                )
+            print(element)
+        result['valids'] = to_insert
+        return result
+
 
     @staticmethod
     async def instert_from_csv(file):

@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
 from g_challenge.src.core.db.db_connect import ENGINE, BASE, SESSION, excecute
 import csv
 from sqlalchemy import insert
@@ -9,7 +8,7 @@ class Job(BASE):
     __tablename__ = 'jobs'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    job = Column(String)
+    job = Column(String, unique=True)
 
     @staticmethod
     def __delete_schema__():
@@ -20,6 +19,31 @@ class Job(BASE):
     def __create_all_schemas__():
         '''Create table'''
         BASE.metadata.create_all(ENGINE)
+
+    @staticmethod
+    async def insert_jobs(jobs: list):
+        result = {'valids':[], 'invalids':[]}
+        to_insert = []
+        obj = {}
+        for element in jobs:
+            if element.id:
+                obj['id'] = element.id
+            obj['job'] = element.job
+            try:
+                stmt = insert(Job).values(**obj).returning(Job)
+                query_result = excecute(stmt).fetchone()
+                to_insert.append({
+                    'id':int(query_result[0]),
+                    'job':str(query_result[1])
+                    }
+                )
+            except Exception as e:
+                result['invalids'].append(
+                    {'id':element.id, 'job':element.job}
+                )
+            print(element)
+        result['valids'] = to_insert
+        return result
 
     @staticmethod
     async def instert_from_csv(file):
