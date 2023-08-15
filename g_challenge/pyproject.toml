@@ -1,22 +1,34 @@
 [tool.poetry]
 name = "g-challenge"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Hector Vergara <hvergara@inovecode.com>"]
 readme = "README.md"
 packages = [{include = "g_challenge"}]
 
+[tool.poetry.scripts]
+g_challenge = "g_challenge.src.main:app"
+
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 pytest = "^7.4.0"
 pytest-cov = "^4.1.0"
 fastapi = "^0.101.0"
 uvicorn = "^0.23.2"
+psycopg2-binary = "^2.9.7"
+sqlalchemy = "^2.0.19"
+python-multipart = "^0.0.6"
+argparse = "^1.4.0"
+pandas = "^2.0.3"
 
 
 [tool.poetry.group.dev.dependencies]
 bandit = "^1.7.5"
 autopep8 = "^2.0.2"
+python-dotenv = "^1.0.0"
+pytest = "^7.4.0"
+coverage = "^7.2.7"
+
 
 [build-system]
 requires = ["poetry-core"]
