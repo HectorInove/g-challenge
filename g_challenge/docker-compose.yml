@@ -24,3 +24,32 @@ services:
     ports:
       - 8080:8080
     depends_on: ["db"]
+
+  app:
+    # "build" is the place from where it takes the files to generate the image.
+    # build: .
+    build: .
+    # Imágen to use:
+    image: g_challenge
+    # Container name:
+    container_name: g_challenge
+    # Behavior before failures and when starting the system:
+    restart: always
+    # Linked folders:
+    # volumes:
+    #   # Source code directory:
+    #   - type: bind
+    #     source: ./src
+    #     target: /app
+    # Used ports:
+    ports:
+      - 8020:8020
+
+    # Cosole control:
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    # Command to execute at start:
+    command: python startup.py
+    depends_on: ["db"]

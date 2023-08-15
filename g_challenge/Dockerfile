@@ -1,16 +1,38 @@
-FROM python:3.9.5
+FROM python:3.9-slim
 
-ENV PYTHONUNBUFFERED=1
+LABEL name=g_challenge
 
-# Corremos este comando para actualizar pip.
+# Setup env
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONFAULTHANDLER 1
 
-RUN python -m pip install --upgrade pip
-RUN python -m pip install --upgrade pip
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+SHELL ["/bin/bash", "-c"]
 
-# En este caso como ya está creado el proyecto asignamos
-# como directorio de trabajo el directorio raíz del mismo.
-WORKDIR /opt/back_end/marvel
-COPY . /opt/back_end
-CMD python manage.py runserver 0.0.0.0:8000
+# Install poetry and compilation dependencies
+RUN apt-get update && apt-get install -y 
+RUN pip install --upgrade pip
+RUN pip install poetry
+RUN groupadd dsuser
+RUN useradd --create-home -g dsuser dsuser
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
+
+# Install python dependencies in /.venv
+COPY pyproject.toml poetry.lock ./
+RUN poetry config virtualenvs.create false &&  poetry install --no-root --no-dev
+
+# Create and switch to a new user
+WORKDIR /app
+
+# Install application into container
+COPY dist/ ./dist
+RUN pip install dist/*.whl
+RUN rm -rf pyproject.toml poetry.lock dist
+USER dsuser
+
+COPY startup.py /app
+EXPOSE 8020
+EXPOSE 5432
+CMD python startup.py
