@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'python3 -m unittest discover tests/'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'All tests passed!'
+        }
+        failure {
+            echo 'Tests failed. Check the logs.'
+        }
+    }
+}
